@@ -76,11 +76,6 @@ func (tr *TestRunner) RunTests() {
 	}
 }
 
-// SetUs sets the delay value for the profiler in microseconds
-func SetUs(microseconds int) {
-	prof.SetUs(microseconds)
-}
-
 func executeCommand(command string, args []string) {
 	cmd := exec.Command(command, args...)
 	err := cmd.Run()

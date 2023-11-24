@@ -14,5 +14,5 @@ var (
 	concurrencyTests int
 	failed           []string
 	logger, _        = gogger.NewGogger("gut.log", "logs", 1000000, 1)
-	prof             = profiler.NewProfiler(200)
+	prof             = profiler.NewProfiler()
 )

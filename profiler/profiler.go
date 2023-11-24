@@ -20,12 +20,11 @@ type Profiler struct {
 	t            time.Time
 	profilerFile string
 	testsFile    string
-	microseconds int
 	profiling    bool
 }
 
 // NewProfiler creates a new Profiler instance
-func NewProfiler(microseconds int) *Profiler {
+func NewProfiler() *Profiler {
 
 	profilerFile, err := os.Create("profiler\\.profiler.csv")
 
@@ -53,7 +52,6 @@ func NewProfiler(microseconds int) *Profiler {
 		t:            time.Now(),
 		profilerFile: "profiler\\.profiler.csv",
 		testsFile:    "profiler\\.tests.csv",
-		microseconds: microseconds,
 		profiling:    true,
 	}
 }
@@ -66,16 +64,11 @@ func (p *Profiler) AddTest(test string) {
 	p.strToCSV(testsFile, p.testsFile, time.Since(p.t).Seconds(), test)
 }
 
-// SetUs sets a new pause for profiling in microseconds
-func (p *Profiler) SetUs(microseconds int) {
-	p.microseconds = microseconds
-}
-
 func (p *Profiler) ProfilerThreadFunction() {
 	for {
+
 		profMtx.Lock()
 		p.strToCSV(profilerFile, p.profilerFile, time.Since(p.t).Seconds(), float64(getMemoryUsage()))
-		profMtx.Unlock()
 
 		if !p.profiling {
 			if profilerFile != nil {
@@ -96,6 +89,7 @@ func (p *Profiler) ProfilerThreadFunction() {
 
 			break
 		}
+		profMtx.Unlock()
 	}
 }
 
